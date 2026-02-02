@@ -4,7 +4,7 @@ import type { signUpReq, signUpRes, loginReq, refreshReq, refreshRes } from "@/t
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
 
 const SIGNUP_URL = `${API_BASE_URL}/auth/signup`
-const LOGIN_URL = `${API_BASE_URL}/auth/login`
+const LOGIN_URL = `${API_BASE_URL}/auth/signin`
 const REFRESH_URL = `${API_BASE_URL}/auth/refresh`
 
 /**
