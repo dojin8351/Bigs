@@ -2,8 +2,10 @@
 
 /**
  * 게시글 첨부 이미지 (Next.js Image)
- * next.config images.remotePatterns 설정된 외부 API URL 전용.
- * 로드 실패 시 에러 메시지 표시.
+ *
+ * - next.config images.remotePatterns 설정된 외부 API URL 전용
+ * - min-w-0, max-w-full, overflow-hidden으로 모바일 가로 스크롤 방지
+ * - object-contain으로 비율 유지, 로드 실패 시 에러 메시지 표시
  */
 import { useState } from "react"
 import Image from "next/image"

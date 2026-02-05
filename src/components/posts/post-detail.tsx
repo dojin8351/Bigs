@@ -4,6 +4,7 @@
  * 게시글 상세 보기 다이얼로그
  *
  * - PostDetailBody로 제목/메타/이미지/본문 공통 렌더
+ * - flex 레이아웃: 본문은 flex-1 overflow-y-auto, 푸터는 shrink-0 (이미지·버튼 겹침 방지)
  * - isLoading 시 PostDetailSkeleton 표시
  * - 푸터: 닫기, 링크 복사, 수정, 삭제
  */

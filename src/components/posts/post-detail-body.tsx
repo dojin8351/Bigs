@@ -2,7 +2,9 @@
 
 /**
  * 게시글 상세 본문 (제목, 작성자, 날짜, 이미지, 내용)
- * PostDetail 다이얼로그와 /posts/[id] 페이지에서 공통 사용
+ *
+ * PostDetail 다이얼로그와 /posts/[id] 페이지에서 공통 사용.
+ * 이미지 래퍼에 min-w-0 overflow-hidden 적용으로 가로 스크롤 방지.
  */
 import { Separator } from "@/components/ui/separator"
 import { getImageUrl } from "@/lib/constants/api"

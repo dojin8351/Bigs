@@ -1,5 +1,11 @@
 "use client"
 
+/**
+ * 다이얼로그 UI 컴포넌트 (Radix UI 기반)
+ *
+ * - DialogContent: overflow-x-hidden으로 넓은 콘텐츠 시 가로 스크롤 방지
+ * - grid 기본 레이아웃, className으로 커스터마이즈 가능
+ */
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"

@@ -1,7 +1,9 @@
 /**
  * 루트 레이아웃
- * Geist 폰트, QueryProvider, ThemeProvider, ErrorBoundary, Toaster(sonner) 적용.
- * html lang="ko", suppressHydrationWarning (next-themes SSR 대응).
+ *
+ * - Geist 폰트, QueryProvider, ThemeProvider, ErrorBoundary, Toaster(sonner) 적용
+ * - html lang="ko", suppressHydrationWarning (next-themes SSR 대응)
+ * - body overflow-x-hidden: 넓은 이미지 등으로 인한 페이지 가로 스크롤 방지
  */
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"

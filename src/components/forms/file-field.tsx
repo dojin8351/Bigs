@@ -7,6 +7,7 @@
  * - value는 field에서 제외: input[type=file]에 value 전달 시 React 경고 (보안상 읽기 전용)
  * - 이미지 선택 시 Blob URL로 미리보기 표시. cleanup 시 URL.revokeObjectURL로 메모리 해제
  * - accept 기본값 "image/*", X 버튼으로 선택 해제
+ * - min-w-0, overflow-hidden으로 모달 내 가로 스크롤 방지. 미리보기는 input처럼 가로 꽉 차고 이미지 중앙 정렬
  */
 import { useRef, useEffect, useState } from "react"
 import {

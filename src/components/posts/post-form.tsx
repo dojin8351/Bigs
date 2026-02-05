@@ -6,6 +6,8 @@
  * - mode: create | edit. edit 시 post로 초기값 설정
  * - postSchema 검증, 카테고리(useQuery), 제목, 내용, 이미지(FileField)
  * - 수정 시 post.imageUrl이 있으면 "현재 이미지" 표시. watchedFile 선택 시 숨김
+ * - overflow-x-hidden, form min-w-0으로 넓은 이미지 첨부 시 모달 가로 스크롤 방지
+ * - 이미지 박스: input처럼 가로 전체, 이미지 중앙 정렬
  * - isDirty + beforeunload: 새로고침/탭 닫기 경고
  * - 닫기 시 isDirty면 "저장하지 않은 내용" 확인 모달
  */
