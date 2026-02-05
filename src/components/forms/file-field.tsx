@@ -61,7 +61,10 @@ export function FileField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field: { onChange, value: _value, ...field } }) => (
+      render={
+        // value 제외: file input에 value 전달 시 React 경고 (의도적 미사용)
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+        ({ field: { onChange, value: _value, ...field } }) => (
           <FormItem>
             <FormLabel>{label}</FormLabel>
             {description && (
