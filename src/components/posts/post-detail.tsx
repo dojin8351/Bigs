@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { Post } from "@/types/post"
-import { API_BASE_URL } from "@/lib/constants/api"
+import { getImageUrl } from "@/lib/constants/api"
 
 interface PostDetailProps {
   post: Post
@@ -44,24 +44,6 @@ export function PostDetail({
   }
 
   const isUpdated = post.createdAt !== post.updatedAt
-
-  /** API가 절대 경로 또는 상대 경로 반환. 상대면 NEXT_PUBLIC_API_BASE_URL과 결합 */
-  const getImageUrl = (imageUrl: string | null | undefined): string | null => {
-    if (!imageUrl || imageUrl.trim() === "") {
-      return null
-    }
-    
-    // 이미 전체 URL인 경우 그대로 사용
-    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
-      return imageUrl
-    }
-    
-    // 상대 경로인 경우 API 베이스 URL과 결합
-    // imageUrl이 이미 "/"로 시작하는지 확인
-    const path = imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`
-    return `${API_BASE_URL}${path}`
-  }
-
   const imageUrl = getImageUrl(post.imageUrl)
 
   return (
@@ -145,7 +127,7 @@ export function PostDetail({
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0 mt-6 flex-col-reverse sm:flex-row">
+        <DialogFooter className="gap-3 sm:gap-4 mt-6 flex-col-reverse sm:flex-row">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

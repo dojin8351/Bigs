@@ -2,8 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { refresh } from "@/api/auth"
 import { useAuthStore } from "@/lib/stores/auth-store"
 import { isTokenExpired } from "@/lib/utils/jwt"
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
+import { API_BASE_URL } from "@/lib/constants/api"
 
 /**
  * 공개 API 클라이언트 (토큰 없이 호출)

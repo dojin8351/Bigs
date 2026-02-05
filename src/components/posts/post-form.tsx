@@ -29,7 +29,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/api/post"
 import { postKeys } from "@/lib/queries/post-keys"
 import { INPUT_LIMITS } from "@/lib/constants/validation"
-import { API_BASE_URL } from "@/lib/constants/api"
+import { getImageUrl } from "@/lib/constants/api"
 
 interface PostFormProps {
   open: boolean
@@ -171,14 +171,15 @@ export function PostForm({
               description="이미지 파일을 선택하세요 (선택사항)"
             />
             {/* 수정 모드일 때 기존 이미지 표시 */}
-            {!isCreate && post?.imageUrl && !watchedFile && (
+            {!isCreate && post?.imageUrl && !watchedFile && (() => {
+              const imageSrc = getImageUrl(post.imageUrl)
+              return imageSrc ? (
               <div className="space-y-2">
                 <p className="text-sm font-medium">현재 이미지</p>
                 <div className="relative w-full">
-                  {/* API imageUrl이 상대 경로일 수 있음. base URL 결합. next/image는 외부 도메인 설정 필요해 img 사용 */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`${API_BASE_URL}${post.imageUrl.startsWith("/") ? "" : "/"}${post.imageUrl}`}
+                    src={imageSrc}
                     alt={post.title}
                     className="w-full h-auto rounded-lg border border-gray-200/80 dark:border-border/50 object-contain max-h-40 sm:max-h-52 md:max-h-64"
                     onError={(e) => {
@@ -190,7 +191,8 @@ export function PostForm({
                   새 이미지를 선택하면 기존 이미지가 교체됩니다.
                 </p>
               </div>
-            )}
+            ) : null
+            })()}
             {(form.formState.errors.root || error) && (
               <div
                 role="alert"
