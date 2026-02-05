@@ -2,7 +2,10 @@
 
 /**
  * 게시글 테이블 컴포넌트
- * 데스크톱: 테이블 뷰, 모바일: 카드 뷰. 정렬, 로딩, 에러, 빈 상태 처리
+ *
+ * - md 미만: PostMobileCard 카드 뷰 (모바일 정렬 버튼 포함)
+ * - md 이상: Table + SortableHeader (제목, 작성일 정렬, aria-sort, 키보드 접근성)
+ * - 로딩: Skeleton. 에러: 메시지 + 다시 시도. 빈 목록: "글 작성" 유도 UI
  */
 import { ArrowDown, ArrowUp, ArrowUpDown, FileQuestion, Plus, RefreshCw } from "lucide-react"
 import {
@@ -270,7 +273,7 @@ export function PostTable({
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/30 border-b border-border/50">
-                <TableHead className="w-[80px] font-semibold px-4 py-3">번호</TableHead>
+                <TableHead className="w-[80px] font-semibold px-4 py-3 text-center">번호</TableHead>
                 <SortableHeader
                   label="제목"
                   column="title"
@@ -278,14 +281,14 @@ export function PostTable({
                   sortDirection={sortDirection}
                   onSort={onSort}
                 />
-                <TableHead className="w-[100px] font-semibold px-4 py-3">카테고리</TableHead>
+                <TableHead className="w-[100px] font-semibold px-4 py-3 text-center">카테고리</TableHead>
                 <SortableHeader
                   label="작성일"
                   column="date"
                   sortColumn={sortColumn}
                   sortDirection={sortDirection}
                   onSort={onSort}
-                  className="w-[140px]"
+                  className="w-[140px] text-center [&>div]:justify-center"
                 />
               </TableRow>
             </TableHeader>
@@ -293,17 +296,17 @@ export function PostTable({
               {isLoading ? (
                 Array.from({ length: pageSize }).map((_, index) => (
                   <TableRow key={`skeleton-${index}`}>
-                    <TableCell>
-                      <Skeleton className="h-4 w-12" />
+                    <TableCell className="text-center">
+                      <Skeleton className="h-4 w-12 mx-auto" />
                     </TableCell>
                     <TableCell>
                       <Skeleton className="h-4 w-full max-w-md" />
                     </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-16" />
+                    <TableCell className="text-center">
+                      <Skeleton className="h-4 w-16 mx-auto" />
                     </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-32" />
+                    <TableCell className="text-center">
+                      <Skeleton className="h-4 w-32 mx-auto" />
                     </TableCell>
                   </TableRow>
                 ))

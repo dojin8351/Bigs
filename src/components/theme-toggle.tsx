@@ -2,6 +2,9 @@
 
 /**
  * 라이트/다크 모드 토글 버튼
+ *
+ * useTheme으로 현재 테마 확인 후 클릭 시 light ↔ dark 전환.
+ * mounted 전까지 Sun 아이콘 플레이스홀더 (SSR hydration 불일치 방지).
  */
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"

@@ -4,15 +4,17 @@ import { postKeys } from "@/lib/queries/post-keys"
 import type { Post } from "@/types/post"
 
 interface UsePostDetailOptions {
+  /** 목록에서 선택한 게시글 (다이얼로그에 전달된 Post) */
   post: Post | null
+  /** 쿼리 실행 여부. 다이얼로그가 열려 있을 때만 true로 설정하여 불필요한 요청 방지 */
   enabled?: boolean
 }
 
 /**
  * 게시글 상세 조회 훅
  *
- * - enabled: 상세 다이얼로그가 열렸을 때만(enabled=true) API 호출. 닫혀 있으면 호출 안 함.
- * - post: 목록에서 클릭한 게시글. 상세 API는 전체 content, imageUrl 등을 반환.
+ * post가 있고 enabled가 true일 때만 getPost API를 호출합니다.
+ * 상세 다이얼로그가 닫혀 있으면 enabled=false로 두어 API 호출을 하지 않습니다.
  */
 export function usePostDetail(options: UsePostDetailOptions) {
   const { post, enabled = true } = options

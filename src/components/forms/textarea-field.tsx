@@ -2,6 +2,9 @@
 
 /**
  * 텍스트 영역 폼 필드 (react-hook-form 연동)
+ *
+ * FormField + Textarea. label, placeholder, rows, maxLength 지원.
+ * 게시글 내용 등 다중 라인 텍스트용.
  */
 import {
   FormControl,

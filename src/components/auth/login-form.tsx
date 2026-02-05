@@ -2,7 +2,10 @@
 
 /**
  * 로그인 폼 컴포넌트
- * 이메일·비밀번호 입력 후 로그인 API 호출, 성공 시 게시판 페이지로 이동
+ *
+ * - react-hook-form + zodResolver(loginSchema)로 클라이언트 검증
+ * - 로그인 API 성공 시 accessToken/refreshToken을 auth store에 저장 후 /posts로 이동
+ * - 이미 로그인된 경우(hasHydrated && isAuthenticated) /posts로 리다이렉트
  */
 import { useEffect, useCallback } from "react"
 import Link from "next/link"

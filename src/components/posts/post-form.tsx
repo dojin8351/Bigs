@@ -2,9 +2,14 @@
 
 /**
  * 게시글 작성/수정 폼 다이얼로그
- * 카테고리, 제목, 내용, 이미지 첨부 필드 포함
+ *
+ * - mode: create | edit. edit 시 post로 초기값 설정
+ * - postSchema 검증, 카테고리(useQuery), 제목, 내용, 이미지(FileField)
+ * - 수정 시 post.imageUrl이 있으면 "현재 이미지" 표시. watchedFile 선택 시 숨김
+ * - isDirty + beforeunload: 새로고침/탭 닫기 경고
+ * - 닫기 시 isDirty면 "저장하지 않은 내용" 확인 모달
  */
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
 import { useWatch } from "react-hook-form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -66,6 +71,8 @@ export function PostForm({
     },
   })
 
+  const [showUnsavedConfirm, setShowUnsavedConfirm] = useState(false)
+
   /** 파일 선택 상태 감시. 새 파일 선택 시 기존 이미지 UI 숨기기 위해 사용 */
   const watchedFile = useWatch({ control: form.control, name: "file", defaultValue: null })
 
@@ -97,6 +104,17 @@ export function PostForm({
     }
   }, [open, mode, post, form])
 
+  /** 폼 이탈 경고: 다이얼로그 열려 있고 입력 변경 시 새로고침/탭 닫기 경고 */
+  useEffect(() => {
+    const isDirty = form.formState.isDirty
+    if (!open || !isDirty) return
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+    }
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload)
+  }, [open, form.formState.isDirty])
+
   const handleSubmit = useCallback(
     async (data: PostFormValues) => {
       try {
@@ -115,10 +133,34 @@ export function PostForm({
     [onSubmit, form, onOpenChange]
   )
 
+  /** 다이얼로그 닫기 시도: isDirty면 확인 모달 표시 */
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      if (nextOpen) {
+        onOpenChange(true)
+      } else {
+        if (form.formState.isDirty) {
+          setShowUnsavedConfirm(true)
+        } else {
+          onOpenChange(false)
+        }
+      }
+    },
+    [onOpenChange, form.formState.isDirty]
+  )
+
+  /** 확인 모달에서 "닫기" 선택 시 실제 닫기 */
+  const handleConfirmClose = useCallback(() => {
+    form.reset()
+    setShowUnsavedConfirm(false)
+    onOpenChange(false)
+  }, [form, onOpenChange])
+
   const isCreate = mode === "create"
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={
           "border border-gray-200/80 dark:border-border/50 bg-white dark:bg-card/95 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-gray-200/50 dark:shadow-primary/5 w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto p-4 sm:p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 " +
@@ -201,11 +243,11 @@ export function PostForm({
                 {form.formState.errors.root?.message || error}
               </div>
             )}
-            <DialogFooter className="gap-2 sm:gap-0 flex-col-reverse sm:flex-row">
+            <DialogFooter className="gap-3 sm:gap-4 flex-col-reverse sm:flex-row">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleOpenChange(false)}
                 className="h-11 w-full sm:w-auto"
               >
                 취소
@@ -235,5 +277,36 @@ export function PostForm({
         </Form>
       </DialogContent>
     </Dialog>
+
+    {/* 저장되지 않을 수 있다는 확인 모달 */}
+    <Dialog open={showUnsavedConfirm} onOpenChange={setShowUnsavedConfirm}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle>작성 취소</DialogTitle>
+          <DialogDescription>
+            저장하지 않은 내용이 있습니다. 닫으면 작성한 내용이 저장되지 않을 수 있습니다. 정말 닫으시겠습니까?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-3 sm:gap-4 flex-col-reverse sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowUnsavedConfirm(false)}
+            className="h-11"
+          >
+            계속 작성
+          </Button>
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={handleConfirmClose}
+            className="h-11"
+          >
+            닫기
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   )
 }

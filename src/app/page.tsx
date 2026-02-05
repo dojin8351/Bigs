@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * 홈 페이지 (/)
+ * 로그인/회원가입 버튼이 있는 랜딩. hasHydrated && isAuthenticated 시 /posts로 리다이렉트.
+ * hydration 완료 전에는 null 반환(깜빡임 방지).
+ */
 import { useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"

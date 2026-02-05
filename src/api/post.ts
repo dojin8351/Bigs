@@ -1,3 +1,15 @@
+/**
+ * 게시글 관련 API 모듈
+ *
+ * - getCategories: 카테고리 목록 (NOTICE, FREE, QNA, ETC)
+ * - getPostList: 게시글 목록 (page, size 파라미터)
+ * - getPost: 게시글 상세 (id)
+ * - createPost: 게시글 등록 (FormData: request JSON + file)
+ * - updatePost: 게시글 수정 (FormData)
+ * - deletePost: 게시글 삭제
+ *
+ * apiClient 사용 (JWT 자동 첨부, 401 시 자동 refresh)
+ */
 import { apiClient } from "@/lib/api/client"
 import { devLog } from "@/lib/utils/logger"
 import type {

@@ -2,26 +2,34 @@ import { useState, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { getPostList } from "@/api/post"
 import { postKeys } from "@/lib/queries/post-keys"
+import { useDebounce } from "./use-debounce"
 import type { BoardCategory, PostListItem } from "@/types/post"
 
+/** 정렬 대상 컬럼 (제목, 작성일) */
 export type SortColumn = "title" | "date"
+/** 정렬 방향 */
 export type SortDirection = "asc" | "desc"
 
 interface UsePostListOptions {
+  /** 한 페이지당 게시글 수 (기본값: 10) */
   pageSize?: number
+  /** 검색어 디바운스 지연 시간(ms). 기본값: 300 */
+  searchDebounceMs?: number
 }
 
 /**
  * 게시글 목록 조회 및 클라이언트 사이드 필터링 훅
  *
- * 데이터 흐름: API 전체 조회 → 카테고리 필터 → 정렬 → 페이지 분할
- * - getPostList(1000): 서버 페이지네이션 미지원 가정, 전체 데이터를 한 번에 가져와 캐싱
- * - postListData: API 응답 형식을 유지하면서 content만 현재 페이지 분으로 치환 (PostPagination last 판단용)
+ * 데이터 흐름: API 전체 조회 → 카테고리 필터 → 제목 검색(debounce) → 정렬 → 페이지 분할
+ * - getPostList(1000): 서버 페이지네이션 미지원 가정, 전체 데이터를 한 번에 가져와 5분간 캐싱
+ * - postListData: PostListResponse 형식을 유지하면서 content만 현재 페이지 분으로 치환 (페이지네이션 UI용)
  */
 export function usePostList(options: UsePostListOptions = {}) {
-  const { pageSize = 10 } = options
+  const { pageSize = 10, searchDebounceMs = 300 } = options
   const [currentPage, setCurrentPage] = useState(0)
   const [selectedCategory, setSelectedCategory] = useState<BoardCategory | undefined>(undefined)
+  const [searchQuery, setSearchQuery] = useState("")
+  const debouncedSearch = useDebounce(searchQuery.trim(), searchDebounceMs)
   const [sortColumn, setSortColumn] = useState<SortColumn>("date")
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc")
 
@@ -38,19 +46,23 @@ export function usePostList(options: UsePostListOptions = {}) {
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
   })
 
-  /** selectedCategory가 undefined면 "모두" = 전체 표시 */
+  /** selectedCategory가 undefined면 "모두" = 전체 표시. debouncedSearch로 제목 검색 */
   const content = allPostsData?.content
   const filteredPosts = useMemo(() => {
     if (!content) return []
-    
-    if (selectedCategory === undefined) {
-      return content
+
+    let result = content
+    if (selectedCategory !== undefined) {
+      result = result.filter((post) => post.category === selectedCategory)
     }
-    
-    return content.filter(
-      (post) => post.category === selectedCategory
-    )
-  }, [content, selectedCategory])
+    if (debouncedSearch) {
+      const q = debouncedSearch.toLowerCase()
+      result = result.filter((post) =>
+        post.title.toLowerCase().includes(q)
+      )
+    }
+    return result
+  }, [content, selectedCategory, debouncedSearch])
 
   /** mult: asc=1(앞이 작으면 음수), desc=-1(앞이 크면 음수)로 정렬 방향 제어 */
   const sortedPosts = useMemo(() => {
@@ -86,6 +98,12 @@ export function usePostList(options: UsePostListOptions = {}) {
     setCurrentPage(0)
   }
 
+  /** 검색어 변경 시 1페이지로 */
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value)
+    setCurrentPage(0)
+  }
+
   /** 같은 컬럼 클릭: asc↔desc 토글. 다른 컬럼: 제목=asc, 날짜=desc 기본값. 정렬 변경 시 1페이지로 */
   const handleSort = (column: SortColumn) => {
     if (sortColumn === column) {
@@ -117,6 +135,8 @@ export function usePostList(options: UsePostListOptions = {}) {
     totalPages,
     currentPage,
     selectedCategory,
+    searchQuery,
+    handleSearchChange,
     pageSize,
     // 상태
     isLoading,

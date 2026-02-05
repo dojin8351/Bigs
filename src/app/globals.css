@@ -1,3 +1,7 @@
+/**
+ * 전역 스타일
+ * Tailwind v4, tw-animate-css, dark variant, @theme 변수, :root / .dark 변수 정의.
+ */
 @import "tailwindcss";
 @import "tw-animate-css";
 

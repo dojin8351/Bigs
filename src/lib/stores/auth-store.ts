@@ -1,13 +1,24 @@
+/**
+ * 인증 상태 전역 스토어 (Zustand + persist)
+ *
+ * - accessToken, refreshToken: localStorage에 영구 저장
+ * - user: JWT에서 추출한 사용자 정보 (name, username)
+ * - hasHydrated: SSR 후 클라이언트 hydration 완료 여부 (초기 렌더링 리다이렉트 방지용)
+ *
+ * onRehydrateStorage: localStorage 복원 시 토큰 만료 검사 및 사용자 정보 재추출
+ */
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { extractUserFromToken, isTokenExpired } from "@/lib/utils/jwt"
 import { devLog } from "@/lib/utils/logger"
 
+/** 로그인된 사용자 기본 정보 */
 interface UserInfo {
   name: string
   username: string
 }
 
+/** 인증 스토어 상태 및 액션 타입 */
 interface AuthState {
   accessToken: string | null
   refreshToken: string | null

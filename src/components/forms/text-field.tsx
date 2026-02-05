@@ -2,6 +2,9 @@
 
 /**
  * 일반 텍스트 입력 폼 필드 (react-hook-form 연동)
+ *
+ * FormField + Input. label, placeholder, maxLength 지원.
+ * 게시글 제목 등 단일 라인 텍스트용.
  */
 import {
   FormControl,

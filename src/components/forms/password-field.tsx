@@ -2,7 +2,10 @@
 
 /**
  * 비밀번호 입력 폼 필드 (react-hook-form 연동)
- * 비밀번호 표시/숨기기 토글 버튼 포함
+ *
+ * - type="password" / "text" 토글 (Eye/EyeOff 아이콘, aria-label)
+ * - showDescription이 true면 description 표시 (회원가입 시 비밀번호 규칙 안내)
+ * - maxLength, autoComplete 지원
  */
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"

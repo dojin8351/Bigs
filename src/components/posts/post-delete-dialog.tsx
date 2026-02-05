@@ -2,6 +2,9 @@
 
 /**
  * 게시글 삭제 확인 다이얼로그
+ *
+ * post.title 표시, onDelete 비동기 호출. 실패 시 devLog.error.
+ * isLoading 시 삭제 버튼 비활성화. DialogFooter gap-3 sm:gap-4.
  */
 import {
   Dialog,
@@ -53,7 +56,7 @@ export function PostDeleteDialog({
             이 작업은 되돌릴 수 없습니다.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 flex-col-reverse sm:flex-row">
+        <DialogFooter className="gap-3 sm:gap-4 flex-col-reverse sm:flex-row">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

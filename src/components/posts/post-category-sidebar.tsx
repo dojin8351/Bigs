@@ -2,7 +2,10 @@
 
 /**
  * 게시글 카테고리 필터 사이드바
- * 데스크톱: 세로 사이드바, 모바일: 수평 스크롤
+ *
+ * - 모바일/태블릿(lg 미만): 수평 스크롤 nav
+ * - 데스크톱(lg 이상): 세로 사이드바 카드(sticky top-6)
+ * - "모두" + categories 객체 기반 버튼. selectedCategory와 일치 시 primary 스타일
  */
 import {
   Card,

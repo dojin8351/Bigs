@@ -2,7 +2,11 @@
 
 /**
  * 게시글 목록 메인 컴포넌트
- * 카테고리 필터, 테이블, 페이지네이션, 작성/수정/상세/삭제 다이얼로그 통합
+ *
+ * usePostList, usePostCategories, usePostDialog, usePostMutations, usePostDetail, usePostActions 통합.
+ * - 카테고리 사이드바 + 테이블/카드 + 페이지네이션
+ * - 생성/수정/상세/삭제 다이얼로그. mutation 성공 시 onSuccess로 다이얼로그 자동 닫기
+ * - 상세: postDetail API 데이터 사용. 로딩 중이면 selectedPost(목록 데이터)로 먼저 표시
  */
 import {
   Card,
@@ -40,6 +44,8 @@ export function PostList() {
     setCurrentPage,
     handleCategoryChange,
     handleSort,
+    handleSearchChange,
+    searchQuery,
     sortColumn,
     sortDirection,
     refetch,
@@ -72,7 +78,7 @@ export function PostList() {
   })
 
   /** 상세 다이얼로그 열려 있을 때만 API 호출. postDetail 로딩 완료 전엔 selectedPost(목록 데이터) 사용 */
-  const { data: postDetail } = usePostDetail({
+  const { data: postDetail, isLoading: isPostDetailLoading } = usePostDetail({
     post: selectedPost,
     enabled: isDetailDialogOpen,
   })
@@ -97,7 +103,11 @@ export function PostList() {
       {/* 메인 컨텐츠 */}
       <div className="flex-1 space-y-6">
         <Card className="border border-border/50 bg-card/50 backdrop-blur-xl shadow-2xl shadow-primary/5 dark:bg-card dark:shadow-lg dark:shadow-black/10 overflow-hidden">
-          <PostListHeader onOpenCreateDialog={openCreateDialog} />
+          <PostListHeader
+            onOpenCreateDialog={openCreateDialog}
+            searchQuery={searchQuery}
+            onSearchChange={handleSearchChange}
+          />
           <CardContent className="p-4 sm:p-6">
             <PostTable
               isLoading={isLoading}
@@ -165,6 +175,7 @@ export function PostList() {
         <PostDetail
           post={postDetail || selectedPost}
           open={isDetailDialogOpen}
+          isLoading={isPostDetailLoading}
           onOpenChange={(open) => {
             if (!open) closeDetailDialog()
           }}

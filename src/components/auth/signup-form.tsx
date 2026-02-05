@@ -2,7 +2,10 @@
 
 /**
  * 회원가입 폼 컴포넌트
- * 이메일·이름·비밀번호·비밀번호 확인 입력 후 가입 API 호출, 성공 시 완료 모달 표시 후 로그인 페이지로 이동
+ *
+ * - react-hook-form + zodResolver(signupSchema)로 검증 (비밀번호 규칙, 비밀번호 일치 포함)
+ * - 가입 API 성공 시 완료 모달 표시, 확인 클릭 시 폼 리셋 후 /login으로 이동
+ * - 이미 로그인된 경우 /posts로 리다이렉트. onInteractOutside preventDefault로 모달 외부 클릭 무시
  */
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
@@ -203,7 +206,7 @@ export function SignupForm() {
               로그인 페이지로 이동하시겠습니까?
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="gap-3 sm:gap-4">
             <Button onClick={handleSuccessConfirm} className="w-full">
               확인
             </Button>

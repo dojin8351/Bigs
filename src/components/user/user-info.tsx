@@ -2,7 +2,9 @@
 
 /**
  * 로그인된 사용자 정보 표시 (아바타 + 드롭다운)
- * 사용자 이름, 이메일 표시 및 로그아웃 버튼
+ *
+ * Avatar + initials(이름 첫 글자 2자). DropdownMenu에 이름, username, 로그아웃 버튼.
+ * onLogout 클릭 시 로그아웃 처리(부모에서 clearTokens + 리다이렉트 등).
  */
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {

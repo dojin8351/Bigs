@@ -5,12 +5,13 @@ import { devLog } from "@/lib/utils/logger"
 /**
  * 게시글 액션 핸들러 훅
  *
- * - handleViewPost: 목록의 PostListItem → Post 변환만. 실제 상세 fetch는 usePostDetail에서.
- * - handleEditPost: 수정 폼에 content, imageUrl 등 필요하므로 getPost API 호출. 실패 시 목록 데이터로 대체.
- * - handleDeletePost: 삭제 다이얼로그는 제목만 필요하므로 변환만.
+ * 목록(PostListItem)을 클릭했을 때 상세/수정/삭제 다이얼로그에 전달할 Post 객체를 생성합니다.
+ * - handleViewPost: 변환만 수행. 실제 상세 fetch는 usePostDetail에서 수행.
+ * - handleEditPost: 수정 폼에 content, imageUrl 등이 필요하므로 getPost API 호출. 실패 시 목록 데이터로 대체.
+ * - handleDeletePost: 삭제 확인 다이얼로그는 제목만 필요하므로 변환만 수행.
  */
 export function usePostActions() {
-  /** 목록 타입(PostListItem)을 상세/다이얼로그용 Post 타입으로 변환 (content, imageUrl 없음) */
+  /** PostListItem을 Post 형태로 변환 (content, imageUrl은 빈 값. 상세 API에서 채움) */
   const convertListItemToPost = (post: PostListItem): Post => {
     return {
       id: post.id,
@@ -39,6 +40,7 @@ export function usePostActions() {
     return convertListItemToPost(post)
   }
 
+  /** ISO 날짜 문자열을 한국어 형식(예: 2024년 1월 15일 오후 3:30)으로 포맷 */
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString("ko-KR", {

@@ -1,9 +1,15 @@
 import { devLog } from "@/lib/utils/logger"
 
 /**
- * JWT 토큰 디코딩 유틸리티
+ * JWT 토큰 유틸리티 모듈
+ *
+ * JWT 토큰의 디코딩, 사용자 정보 추출, 만료 검사 등을 제공합니다.
+ * 서버 검증 없이 클라이언트에서 토큰 상태를 파악할 때 사용합니다.
+ *
+ * @see RFC 7519 - JSON Web Token (JWT)
  */
 
+/** JWT payload 내부 필드 타입 정의 (name, username, iat, exp 등) */
 interface JWTPayload {
   name?: string
   username?: string

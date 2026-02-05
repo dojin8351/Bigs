@@ -3,9 +3,10 @@
 /**
  * 파일 업로드 폼 필드 (react-hook-form 연동)
  *
- * - Input을 hidden으로 두고 Button 클릭 시 fileInputRef.current?.click()으로 트리거
+ * - 숨김 input + "파일 선택" 버튼으로 트리거 (fileInputRef.current?.click())
  * - value는 field에서 제외: input[type=file]에 value 전달 시 React 경고 (보안상 읽기 전용)
- * - Blob URL 미리보기 후 URL.revokeObjectURL로 메모리 해제
+ * - 이미지 선택 시 Blob URL로 미리보기 표시. cleanup 시 URL.revokeObjectURL로 메모리 해제
+ * - accept 기본값 "image/*", X 버튼으로 선택 해제
  */
 import { useRef, useEffect, useState } from "react"
 import {

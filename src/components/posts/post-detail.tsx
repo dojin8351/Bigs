@@ -2,7 +2,11 @@
 
 /**
  * 게시글 상세 보기 다이얼로그
- * 제목, 작성자, 날짜, 내용, 첨부 이미지 표시 및 수정/삭제 버튼 제공
+ *
+ * - 제목, 작성자(author.name/username), 작성일/수정일, 첨부 이미지, 본문(content)
+ * - isLoading 시 PostDetailSkeleton 표시
+ * - 이미지: getImageUrl 처리, onError 시 숨김 후 에러 메시지 div 추가
+ * - 푸터: 닫기, 수정(닫기 후 onEdit), 삭제(닫기 후 onDelete)
  */
 import { Edit, Trash2 } from "lucide-react"
 import {
@@ -16,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { Post } from "@/types/post"
 import { getImageUrl } from "@/lib/constants/api"
+import { PostDetailSkeleton } from "./post-detail-skeleton"
 
 interface PostDetailProps {
   post: Post
@@ -23,6 +28,7 @@ interface PostDetailProps {
   onOpenChange: (open: boolean) => void
   onEdit: () => void
   onDelete: () => void
+  isLoading?: boolean
 }
 
 export function PostDetail({
@@ -31,6 +37,7 @@ export function PostDetail({
   onOpenChange,
   onEdit,
   onDelete,
+  isLoading = false,
 }: PostDetailProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -49,6 +56,13 @@ export function PostDetail({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="border border-gray-200/80 dark:border-border/50 bg-white dark:bg-card/95 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-gray-200/50 dark:shadow-primary/5 w-[calc(100vw-2rem)] max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        {isLoading ? (
+          <>
+            <DialogTitle className="sr-only">게시글 로딩 중</DialogTitle>
+            <PostDetailSkeleton />
+          </>
+        ) : (
+        <>
         <DialogHeader className="space-y-2">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -127,7 +141,7 @@ export function PostDetail({
           </div>
         </div>
 
-        <DialogFooter className="gap-3 sm:gap-4 mt-6 flex-col-reverse sm:flex-row">
+        <DialogFooter className="mt-6">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -158,6 +172,8 @@ export function PostDetail({
             삭제
           </Button>
         </DialogFooter>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   )

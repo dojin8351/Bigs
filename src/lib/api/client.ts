@@ -1,13 +1,19 @@
+/**
+ * API 클라이언트 모듈
+ *
+ * - publicApiClient: 로그인, 회원가입, refresh 등 (Authorization 없음)
+ * - apiClient: 게시판 API 등 (JWT 자동 첨부, 401 시 자동 refresh 후 재요청)
+ *
+ * 401 발생 시: refresh 호출 → 새 토큰 저장 → 원래 요청 재시도
+ * 동시 401 시: failedQueue로 대기 후 한 번에 처리
+ */
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { refresh } from "@/api/auth"
 import { useAuthStore } from "@/lib/stores/auth-store"
 import { isTokenExpired } from "@/lib/utils/jwt"
 import { API_BASE_URL } from "@/lib/constants/api"
 
-/**
- * 공개 API 클라이언트 (토큰 없이 호출)
- * 로그인, 회원가입 등 인증이 필요 없는 API에 사용
- */
+/** 공개 API (로그인, 회원가입, 토큰 갱신) - JWT 불필요 */
 export const publicApiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -15,10 +21,7 @@ export const publicApiClient = axios.create({
   },
 })
 
-/**
- * 보호된 API 클라이언트 (토큰 자동 추가 및 갱신)
- * 게시판 등 인증이 필요한 API에 사용
- */
+/** 인증 필요 API (게시판 CRUD 등) - JWT 자동 첨부, 401 시 자동 refresh */
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {

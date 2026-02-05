@@ -1,5 +1,10 @@
 "use client"
 
+/**
+ * 게시판 페이지 (/posts)
+ * 인증 필요. hasHydrated && (!isAuthenticated || !accessToken) 시 /login 리다이렉트.
+ * hydration/인증 확인 중 로딩 스피너. 헤더(로고, UserInfo, ThemeToggle) + PostList.
+ */
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"

@@ -2,7 +2,9 @@
 
 /**
  * 게시글 목록 페이지네이션
- * 이전/다음 버튼, 페이지 번호, 말줄임 표시
+ *
+ * 7페이지 이하: 전체 번호 표시. 8페이지 이상: 첫·끝 + 현재 주변 ±1 + ellipsis.
+ * currentPage는 0-based. PaginationPrevious/Next로 이전/다음 페이지 이동.
  */
 import {
   Pagination,

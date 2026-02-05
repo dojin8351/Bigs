@@ -1,8 +1,12 @@
 "use client"
 
 /**
- * React Query Provider
- * QueryClient 인스턴스 및 기본 옵션(staleTime, refetchOnWindowFocus 등) 설정
+ * React Query Provider 컴포넌트
+ *
+ * 앱 루트에서 QueryClient를 제공합니다.
+ * - staleTime: 1분 (동일 데이터 재요청 억제)
+ * - refetchOnWindowFocus: false (창 포커스 시 자동 재요청 비활성화)
+ * - mutations retry: 1회
  */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactNode, useState } from "react"

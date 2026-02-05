@@ -2,6 +2,9 @@
 
 /**
  * 사용자 이름 입력 폼 필드 (react-hook-form 연동)
+ *
+ * FormField + Input type="text" + maxLength(INPUT_LIMITS.NAME), autoComplete="name".
+ * 에러 시 border-destructive 스타일 적용.
  */
 import {
   FormControl,

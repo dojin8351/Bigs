@@ -2,6 +2,9 @@
 
 /**
  * 셀렉트(드롭다운) 폼 필드 (react-hook-form 연동)
+ *
+ * Select, SelectTrigger, SelectContent, SelectItem 래핑.
+ * options: { value, label }[] 형태로 전달.
  */
 import {
   FormControl,

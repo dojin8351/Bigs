@@ -1,6 +1,9 @@
 /**
- * 인증 페이지 레이아웃 (로그인·회원가입)
- * 헤더(로고, 테마 토글)와 중앙 정렬된 메인 영역 제공
+ * 인증 페이지 공통 레이아웃 (로그인·회원가입)
+ *
+ * - 헤더: 로고(DOHYEON, / 링크), 테마 토글
+ * - 메인: 중앙 정렬, max-w-md, 페이드인 애니메이션
+ * - title, description은 aria-label에 조합하여 접근성 개선
  */
 import { ReactNode } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -12,6 +15,7 @@ interface AuthLayoutProps {
   description?: string
 }
 
+/** 인증 레이아웃: 헤더 + 중앙 메인 영역. children은 로그인/회원가입 카드 등 */
 export function AuthLayout({ children, title, description }: AuthLayoutProps) {
   const ariaLabel = [title, description].filter(Boolean).join(" - ") || undefined
   return (

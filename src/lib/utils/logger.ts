@@ -1,9 +1,12 @@
 /**
- * 개발 환경에서만 콘솔 로그 출력
- * 프로덕션에서는 로그가 출력되지 않음
+ * 개발 전용 로거 모듈
+ *
+ * NODE_ENV === "development" 일 때만 console.log/warn/error를 출력합니다.
+ * 프로덕션 빌드에서는 모든 로그가 무시되어 성능 및 보안에 유리합니다.
  */
 const isDev = process.env.NODE_ENV === "development"
 
+/** 개발 환경에서만 동작하는 로그 유틸리티 */
 export const devLog = {
   log: (...args: unknown[]) => {
     if (isDev) console.log(...args)

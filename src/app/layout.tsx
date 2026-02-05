@@ -1,9 +1,15 @@
+/**
+ * 루트 레이아웃
+ * Geist 폰트, QueryProvider, ThemeProvider, ErrorBoundary, Toaster(sonner) 적용.
+ * html lang="ko", suppressHydrationWarning (next-themes SSR 대응).
+ */
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Toaster } from "sonner"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { QueryProvider } from "@/lib/providers/query-provider"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +43,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
             <Toaster position="top-center" richColors closeButton />
           </ThemeProvider>
         </QueryProvider>

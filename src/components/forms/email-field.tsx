@@ -2,6 +2,9 @@
 
 /**
  * 이메일 입력 폼 필드 (react-hook-form 연동)
+ *
+ * FormField + Input type="email" + maxLength, autoComplete 지원.
+ * 에러 시 border-destructive 스타일 적용.
  */
 import {
   FormControl,
