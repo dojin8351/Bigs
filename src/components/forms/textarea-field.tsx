@@ -1,5 +1,8 @@
 "use client"
 
+/**
+ * 텍스트 영역 폼 필드 (react-hook-form 연동)
+ */
 import {
   FormControl,
   FormField,
@@ -16,6 +19,7 @@ interface TextareaFieldProps<T extends FieldValues> {
   label?: string
   placeholder?: string
   rows?: number
+  maxLength?: number
 }
 
 export function TextareaField<T extends FieldValues>({
@@ -24,6 +28,7 @@ export function TextareaField<T extends FieldValues>({
   label,
   placeholder,
   rows = 10,
+  maxLength,
 }: TextareaFieldProps<T>) {
   return (
     <FormField
@@ -33,7 +38,7 @@ export function TextareaField<T extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Textarea placeholder={placeholder} rows={rows} {...field} />
+            <Textarea placeholder={placeholder} rows={rows} maxLength={maxLength} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

@@ -1,5 +1,9 @@
 "use client"
 
+/**
+ * 로그인 폼 컴포넌트
+ * 이메일·비밀번호 입력 후 로그인 API 호출, 성공 시 게시판 페이지로 이동
+ */
 import { useCallback } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -24,11 +28,13 @@ import { login } from "@/api/auth"
 import type { loginReq } from "@/types/auth"
 import { useAuthStore } from "@/lib/stores/auth-store"
 import { ERROR_MESSAGES } from "@/lib/constants/messages"
+import { INPUT_LIMITS } from "@/lib/constants/validation"
 
 export function LoginForm() {
   const router = useRouter()
   const setTokens = useAuthStore((state) => state.setTokens)
 
+  /** zodResolver + loginSchema: 이메일 형식, 비밀번호 필수 검증 */
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,22 +52,8 @@ export function LoginForm() {
     },
     onSuccess: () => {
       // Zustand store에서 저장된 사용자 정보 가져오기
-      const user = useAuthStore.getState().user
-      
-      console.log("=".repeat(50))
-      console.log("✅ 로그인 성공!")
-      console.log("=".repeat(50))
-      if (user) {
-        console.log("👤 사용자 정보:")
-        console.log("  - 이름:", user.name)
-        console.log("  - 이메일:", user.username)
-      } else {
-        console.warn("⚠️ 사용자 정보를 가져올 수 없습니다.")
-      }
-      console.log("=".repeat(50))
-      
-      // 로그인 성공 시 메인 페이지로 리다이렉트
-      router.push("/")
+      // 로그인 성공 시 게시판 페이지로 리다이렉트
+      router.push("/posts")
     },
     onError: () => {
       form.setError("root", {
@@ -83,10 +75,12 @@ export function LoginForm() {
   )
 
   return (
-    <Card className="border-2 shadow-lg">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">로그인</CardTitle>
-        <CardDescription>
+    <Card className="border border-border/50 bg-card/50 backdrop-blur-xl shadow-2xl shadow-primary/5 dark:shadow-primary/10">
+      <CardHeader className="space-y-2 pb-6">
+        <CardTitle className="text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          로그인
+        </CardTitle>
+        <CardDescription className="text-base text-muted-foreground/80">
           계정에 로그인하려면 이메일과 비밀번호를 입력하세요
         </CardDescription>
       </CardHeader>
@@ -98,12 +92,16 @@ export function LoginForm() {
               name="username"
               label="이메일"
               placeholder="example@email.com"
+              maxLength={INPUT_LIMITS.EMAIL}
+              autoComplete="email"
             />
             <PasswordField
               control={form.control}
               name="password"
               label="비밀번호"
               placeholder="비밀번호를 입력하세요"
+              maxLength={INPUT_LIMITS.PASSWORD}
+              autoComplete="current-password"
             />
             {form.formState.errors.root && (
               <div
@@ -115,7 +113,7 @@ export function LoginForm() {
             )}
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-11 text-base font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
               disabled={loginMutation.isPending}
               aria-busy={loginMutation.isPending}
             >
