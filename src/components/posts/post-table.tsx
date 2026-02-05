@@ -7,7 +7,7 @@
  * - md 이상: Table + SortableHeader (제목, 작성일 정렬, aria-sort, 키보드 접근성)
  * - 로딩: Skeleton. 에러: 메시지 + 다시 시도. 빈 목록: "글 작성" 유도 UI
  */
-import { ArrowDown, ArrowUp, ArrowUpDown, FileQuestion, Plus, RefreshCw } from "lucide-react"
+import { ArrowDown, ArrowUp, ArrowUpDown, FileQuestion, Plus, RefreshCw, Search } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -37,6 +37,8 @@ interface PostTableProps {
   onRetry?: () => void
   onOpenCreateDialog?: () => void
   categories?: CategoryResponse | null
+  /** 검색/필터로 인해 결과가 없을 때 true (글 작성 유도 대신 "검색 결과가 없습니다" 표시) */
+  isEmptyFromFilter?: boolean
 }
 
 /** md 미만에서 사용. 테이블 대신 카드 형태로 표시, 클릭 시 onView */
@@ -152,6 +154,7 @@ export function PostTable({
   onRetry,
   onOpenCreateDialog,
   categories,
+  isEmptyFromFilter = false,
 }: PostTableProps) {
   const getCategoryLabel = (key: string) =>
     categories && key in categories ? categories[key as keyof CategoryResponse] : key
@@ -202,14 +205,23 @@ export function PostTable({
     if (posts.length === 0) {
       return (
         <div className="rounded-lg border border-border/50 p-8 text-center md:hidden">
-          <FileQuestion className="mx-auto h-12 w-12 text-muted-foreground/60 mb-4" />
-          <p className="text-muted-foreground mb-2">아직 작성된 게시글이 없습니다.</p>
-          <p className="text-sm text-muted-foreground/80 mb-4">첫 번째 게시글을 작성해보세요.</p>
-          {onOpenCreateDialog && (
-            <Button onClick={onOpenCreateDialog}>
-              <Plus className="mr-2 h-4 w-4" />
-              글 작성
-            </Button>
+          {isEmptyFromFilter ? (
+            <>
+              <Search className="mx-auto h-12 w-12 text-muted-foreground/60 mb-4" />
+              <p className="text-muted-foreground">검색 결과가 없습니다.</p>
+            </>
+          ) : (
+            <>
+              <FileQuestion className="mx-auto h-12 w-12 text-muted-foreground/60 mb-4" />
+              <p className="text-muted-foreground mb-2">아직 작성된 게시글이 없습니다.</p>
+              <p className="text-sm text-muted-foreground/80 mb-4">첫 번째 게시글을 작성해보세요.</p>
+              {onOpenCreateDialog && (
+                <Button onClick={onOpenCreateDialog}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  글 작성
+                </Button>
+              )}
+            </>
           )}
         </div>
       )
@@ -331,14 +343,23 @@ export function PostTable({
                 <TableRow>
                   <TableCell colSpan={4} className="text-center py-12">
                     <div className="flex flex-col items-center gap-2">
-                      <FileQuestion className="h-12 w-12 text-muted-foreground/60" />
-                      <p className="text-muted-foreground">아직 작성된 게시글이 없습니다.</p>
-                      <p className="text-sm text-muted-foreground/80">첫 번째 게시글을 작성해보세요.</p>
-                      {onOpenCreateDialog && (
-                        <Button onClick={onOpenCreateDialog} className="mt-2">
-                          <Plus className="mr-2 h-4 w-4" />
-                          글 작성
-                        </Button>
+                      {isEmptyFromFilter ? (
+                        <>
+                          <Search className="h-12 w-12 text-muted-foreground/60" />
+                          <p className="text-muted-foreground">검색 결과가 없습니다.</p>
+                        </>
+                      ) : (
+                        <>
+                          <FileQuestion className="h-12 w-12 text-muted-foreground/60" />
+                          <p className="text-muted-foreground">아직 작성된 게시글이 없습니다.</p>
+                          <p className="text-sm text-muted-foreground/80">첫 번째 게시글을 작성해보세요.</p>
+                          {onOpenCreateDialog && (
+                            <Button onClick={onOpenCreateDialog} className="mt-2">
+                              <Plus className="mr-2 h-4 w-4" />
+                              글 작성
+                            </Button>
+                          )}
+                        </>
                       )}
                     </div>
                   </TableCell>

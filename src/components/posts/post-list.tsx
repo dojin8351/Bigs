@@ -46,6 +46,7 @@ export function PostList() {
     handleSort,
     handleSearchChange,
     searchQuery,
+    isEmptyFromFilter,
     sortColumn,
     sortDirection,
     refetch,
@@ -124,6 +125,7 @@ export function PostList() {
               onRetry={() => refetch()}
               onOpenCreateDialog={openCreateDialog}
               categories={categories}
+              isEmptyFromFilter={isEmptyFromFilter}
             />
             <PostPagination
               totalPages={totalPages}

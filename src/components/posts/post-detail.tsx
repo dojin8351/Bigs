@@ -3,12 +3,12 @@
 /**
  * 게시글 상세 보기 다이얼로그
  *
- * - 제목, 작성자(author.name/username), 작성일/수정일, 첨부 이미지, 본문(content)
+ * - PostDetailBody로 제목/메타/이미지/본문 공통 렌더
  * - isLoading 시 PostDetailSkeleton 표시
- * - 이미지: getImageUrl 처리, onError 시 숨김 후 에러 메시지 div 추가
- * - 푸터: 닫기, 수정(닫기 후 onEdit), 삭제(닫기 후 onDelete)
+ * - 푸터: 닫기, 링크 복사, 수정, 삭제
  */
-import { Edit, Trash2 } from "lucide-react"
+import { Edit, Link2, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 import {
   Dialog,
   DialogContent,
@@ -17,10 +17,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import type { Post } from "@/types/post"
-import { getImageUrl } from "@/lib/constants/api"
+import { SUCCESS_MESSAGES } from "@/lib/constants/messages"
 import { PostDetailSkeleton } from "./post-detail-skeleton"
+import { PostDetailBody } from "./post-detail-body"
 
 interface PostDetailProps {
   post: Post
@@ -39,23 +39,19 @@ export function PostDetail({
   onDelete,
   isLoading = false,
 }: PostDetailProps) {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
+  const handleCopyLink = async () => {
+    try {
+      const url = `${window.location.origin}/posts/${post.id}`
+      await navigator.clipboard.writeText(url)
+      toast.success(SUCCESS_MESSAGES.LINK_COPY)
+    } catch {
+      toast.error("링크 복사에 실패했습니다.")
+    }
   }
-
-  const isUpdated = post.createdAt !== post.updatedAt
-  const imageUrl = getImageUrl(post.imageUrl)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border border-gray-200/80 dark:border-border/50 bg-white dark:bg-card/95 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-gray-200/50 dark:shadow-primary/5 w-[calc(100vw-2rem)] max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <DialogContent className="flex max-h-[90vh] flex-col border border-gray-200/80 dark:border-border/50 bg-white dark:bg-card/95 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-gray-200/50 dark:shadow-primary/5 w-[calc(100vw-2rem)] max-w-3xl p-4 sm:p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {isLoading ? (
           <>
             <DialogTitle className="sr-only">게시글 로딩 중</DialogTitle>
@@ -63,91 +59,32 @@ export function PostDetail({
           </>
         ) : (
         <>
-        <DialogHeader className="space-y-2">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <DialogTitle className="text-xl sm:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent wrap-break-word">
-                {post.title}
-              </DialogTitle>
-              {/* DialogDescription은 <p> 태그이므로 div를 사용할 수 없음. 별도 div로 변경 */}
-              <div className="text-sm sm:text-base text-muted-foreground/80 mt-2">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-wrap">
-                  {post.author && (
-                    <>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-foreground">
-                          {post.author.name}
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {post.author.username}
-                        </span>
-                      </div>
-                      <Separator orientation="vertical" className="h-6 hidden sm:block" />
-                    </>
-                  )}
-                  <div className="flex flex-col">
-                    <span className="text-sm">작성일</span>
-                    <span className="text-sm font-medium">
-                      {formatDate(post.createdAt)}
-                    </span>
-                  </div>
-                  {isUpdated && post.updatedAt && (
-                    <>
-                      <Separator orientation="vertical" className="h-6 hidden sm:block" />
-                      <div className="flex flex-col">
-                        <span className="text-sm">수정일</span>
-                        <span className="text-sm font-medium">
-                          {formatDate(post.updatedAt)}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+        <DialogHeader className="sr-only">
+          <DialogTitle>{post.title}</DialogTitle>
         </DialogHeader>
-
-        <Separator className="my-4" />
-
-        <div className="space-y-4">
-          {/* 이미지가 있는 경우 표시 */}
-          {imageUrl && (
-            <div className="w-full">
-              {/* eslint-disable-next-line @next/next/no-img-element -- 외부 API 이미지 URL */}
-              <img
-                src={imageUrl}
-                alt={post.title}
-                className="w-full h-auto rounded-lg border border-gray-200/80 dark:border-border/50 object-contain max-h-[200px] sm:max-h-[300px] md:max-h-[400px]"
-                onError={(e) => {
-                  // 이미지 로드 실패 시 에러 메시지 표시
-                  const img = e.currentTarget
-                  img.style.display = "none"
-                  const parent = img.parentElement
-                  if (parent && !parent.querySelector(".image-error")) {
-                    const errorDiv = document.createElement("div")
-                    errorDiv.className = "image-error text-sm text-muted-foreground p-4 border border-border/50 rounded-lg bg-muted/50"
-                    errorDiv.textContent = `이미지를 불러올 수 없습니다. (URL: ${imageUrl})`
-                    parent.appendChild(errorDiv)
-                  }
-                }}
-              />
-            </div>
-          )}
-          <div className="prose prose-sm dark:prose-invert max-w-none">
-            <div className="whitespace-pre-wrap text-foreground leading-relaxed">
-              {post.content}
-            </div>
-          </div>
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <PostDetailBody
+            post={post}
+            titleAs="h2"
+            titleClassName="text-xl sm:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent wrap-break-word"
+          />
         </div>
 
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-6 shrink-0 gap-3 sm:gap-4">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
             className="h-11 w-full sm:w-auto"
           >
             닫기
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleCopyLink}
+            className="h-11 w-full sm:w-auto"
+          >
+            <Link2 className="mr-2 h-4 w-4" />
+            링크 복사
           </Button>
           <Button
             variant="outline"

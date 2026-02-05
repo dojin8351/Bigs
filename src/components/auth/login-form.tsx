@@ -1,18 +1,22 @@
 "use client"
 
+const SAVED_USERNAME_KEY = "saved-login-username"
+
 /**
  * 로그인 폼 컴포넌트
  *
  * - react-hook-form + zodResolver(loginSchema)로 클라이언트 검증
  * - 로그인 API 성공 시 accessToken/refreshToken을 auth store에 저장 후 /posts로 이동
  * - 이미 로그인된 경우(hasHydrated && isAuthenticated) /posts로 리다이렉트
+ * - router.replace 사용: 뒤로가기 시 로그인 페이지 재진입 방지
+ * - 아이디 저장: 체크 시 username을 localStorage에 저장, 다음 방문 시 자동 입력
  */
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,18 +36,18 @@ import type { loginReq } from "@/types/auth"
 import { useAuthStore } from "@/lib/stores/auth-store"
 import { ERROR_MESSAGES } from "@/lib/constants/messages"
 import { INPUT_LIMITS } from "@/lib/constants/validation"
+import { postKeys } from "@/lib/queries/post-keys"
 
 export function LoginForm() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const setTokens = useAuthStore((state) => state.setTokens)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const hasHydrated = useAuthStore((state) => state.hasHydrated)
 
-  useEffect(() => {
-    if (hasHydrated && isAuthenticated) {
-      router.replace("/posts")
-    }
-  }, [hasHydrated, isAuthenticated, router])
+  const [rememberMe, setRememberMe] = useState(() =>
+    typeof window !== "undefined" && !!localStorage.getItem(SAVED_USERNAME_KEY)
+  )
 
   /** zodResolver + loginSchema: 이메일 형식, 비밀번호 필수 검증 */
   const form = useForm<LoginFormValues>({
@@ -54,17 +58,37 @@ export function LoginForm() {
     },
   })
 
+  useEffect(() => {
+    if (hasHydrated && isAuthenticated) {
+      router.replace("/posts")
+    }
+  }, [hasHydrated, isAuthenticated, router])
+
+  /** 저장된 아이디 복원 (클라이언트에서만) */
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const saved = localStorage.getItem(SAVED_USERNAME_KEY)
+    if (saved) {
+      form.setValue("username", saved)
+    }
+  }, [form])
+
   const loginMutation = useMutation({
-    mutationFn: async (data: loginReq) => {
-      const response = await login(data)
-      // 로그인 성공 시 토큰 저장
+    mutationFn: async (data: loginReq & { rememberMe?: boolean }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- rememberMe는 onSuccess에서 사용
+      const { rememberMe, ...loginData } = data
+      const response = await login(loginData)
       setTokens(response.accessToken, response.refreshToken)
       return response
     },
-    onSuccess: () => {
-      // Zustand store에서 저장된 사용자 정보 가져오기
-      // 로그인 성공 시 게시판 페이지로 리다이렉트
-      router.push("/posts")
+    onSuccess: async (_data, variables) => {
+      if (variables.rememberMe) {
+        localStorage.setItem(SAVED_USERNAME_KEY, variables.username)
+      } else {
+        localStorage.removeItem(SAVED_USERNAME_KEY)
+      }
+      await queryClient.invalidateQueries({ queryKey: postKeys.lists() })
+      router.replace("/posts")
     },
     onError: () => {
       form.setError("root", {
@@ -80,9 +104,10 @@ export function LoginForm() {
       loginMutation.mutate({
         username: data.username,
         password: data.password,
+        rememberMe,
       })
     },
-    [loginMutation, form]
+    [loginMutation, form, rememberMe]
   )
 
   return (
@@ -114,6 +139,16 @@ export function LoginForm() {
               maxLength={INPUT_LIMITS.PASSWORD}
               autoComplete="current-password"
             />
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded border-input accent-primary"
+                aria-label="아이디 저장"
+              />
+              <span className="text-sm text-muted-foreground">아이디 저장</span>
+            </label>
             {form.formState.errors.root && (
               <div
                 role="alert"

@@ -66,14 +66,14 @@ export function FileField<T extends FieldValues>({
         // value 제외: file input에 value 전달 시 React 경고 (의도적 미사용)
         /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         ({ field: { onChange, value: _value, ...field } }) => (
-          <FormItem>
+          <FormItem className="min-w-0">
             <FormLabel>{label}</FormLabel>
             {description && (
               <p className="text-sm text-muted-foreground">{description}</p>
             )}
             <FormControl>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
+              <div className="min-w-0 space-y-2">
+                <div className="flex min-w-0 items-center gap-2">
                   <Input
                     {...field}
                     ref={fileInputRef}
@@ -95,7 +95,7 @@ export function FileField<T extends FieldValues>({
                     파일 선택
                   </Button>
                   {file && (
-                    <div className="flex items-center gap-2 flex-1">
+                    <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
                       <span className="text-sm text-muted-foreground truncate">
                         {file.name}
                       </span>
@@ -117,12 +117,12 @@ export function FileField<T extends FieldValues>({
                   )}
                 </div>
                 {previewUrl && (
-                  <div className="relative w-full max-w-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- Blob URL 미리보기 */}
+                  <div className="flex min-w-0 w-full items-center justify-center overflow-hidden rounded-md border border-input bg-muted/30 px-4 py-6 min-h-[160px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Blob URL 미리보기, w-full로 컨테이너에 맞춤 후 object-contain으로 비율 유지 */}
                     <img
                       src={previewUrl}
                       alt="미리보기"
-                      className="w-full h-auto rounded-lg border border-border/50 object-contain max-h-64"
+                      className="max-h-48 w-full max-w-full object-contain sm:max-h-64"
                     />
                   </div>
                 )}

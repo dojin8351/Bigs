@@ -5,6 +5,7 @@
  *
  * - react-hook-form + zodResolver(signupSchema)로 검증 (비밀번호 규칙, 비밀번호 일치 포함)
  * - 가입 API 성공 시 완료 모달 표시, 확인 클릭 시 폼 리셋 후 /login으로 이동
+ * - router.replace 사용: 뒤로가기 시 로그인/회원가입 페이지 재진입 방지
  * - 이미 로그인된 경우 /posts로 리다이렉트. onInteractOutside preventDefault로 모달 외부 클릭 무시
  */
 import { useState, useEffect, useCallback } from "react"
@@ -98,7 +99,7 @@ export function SignupForm() {
     setIsSuccessModalOpen(false)
     // 모달 확인 후 폼 리셋 및 페이지 이동
     form.reset()
-    router.push("/login")
+    router.replace("/login")
   }, [form, router])
 
   return (

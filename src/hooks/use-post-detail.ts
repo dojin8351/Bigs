@@ -14,13 +14,14 @@ interface UsePostDetailOptions {
  * 게시글 상세 조회 훅
  *
  * post가 있고 enabled가 true일 때만 getPost API를 호출합니다.
+ * post가 null일 때는 enabled: false로 불필요한 쿼리 키([\"posts\", \"detail\", null])와 API 호출을 방지합니다.
  * 상세 다이얼로그가 닫혀 있으면 enabled=false로 두어 API 호출을 하지 않습니다.
  */
 export function usePostDetail(options: UsePostDetailOptions) {
   const { post, enabled = true } = options
 
   return useQuery({
-    queryKey: post ? postKeys.detail(post.id) : ["posts", "detail", null],
+    queryKey: post ? postKeys.detail(post.id) : ["posts", "detail"],
     queryFn: () => getPost(post!.id),
     enabled: !!post && enabled,
   })

@@ -3,11 +3,12 @@
 /**
  * 게시판 페이지 (/posts)
  * 인증 필요. hasHydrated && (!isAuthenticated || !accessToken) 시 /login 리다이렉트.
- * hydration/인증 확인 중 로딩 스피너. 헤더(로고, UserInfo, ThemeToggle) + PostList.
+ * hydration/인증 확인 중 스켈레톤. 로그아웃 시 React Query 캐시 초기화.
  */
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useQueryClient } from "@tanstack/react-query"
 import { useAuthStore } from "@/lib/stores/auth-store"
 import { PostList } from "@/components/posts/post-list"
 import { Loader2 } from "lucide-react"
@@ -16,6 +17,7 @@ import { UserInfo } from "@/components/user/user-info"
 
 export default function PostsPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const accessToken = useAuthStore((state) => state.accessToken)
   const user = useAuthStore((state) => state.user)
@@ -29,14 +31,14 @@ export default function PostsPage() {
 
     // 인증 상태 확인
     if (!isAuthenticated || !accessToken) {
-      // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-      router.push("/login")
+      router.replace("/login")
     }
   }, [hasHydrated, isAuthenticated, accessToken, router])
 
   const handleLogout = () => {
     useAuthStore.getState().clearTokens()
-    router.push("/")
+    queryClient.clear()
+    router.replace("/")
   }
 
   // hydration이 완료되지 않았거나 인증 확인 중이거나 인증되지 않은 경우 로딩 표시

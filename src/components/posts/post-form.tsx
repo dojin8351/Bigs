@@ -35,6 +35,7 @@ import { getCategories } from "@/api/post"
 import { postKeys } from "@/lib/queries/post-keys"
 import { INPUT_LIMITS } from "@/lib/constants/validation"
 import { getImageUrl } from "@/lib/constants/api"
+import { PostImage } from "./post-image"
 
 interface PostFormProps {
   open: boolean
@@ -163,7 +164,7 @@ export function PostForm({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={
-          "border border-gray-200/80 dark:border-border/50 bg-white dark:bg-card/95 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-gray-200/50 dark:shadow-primary/5 w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto p-4 sm:p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 " +
+          "border border-gray-200/80 dark:border-border/50 bg-white dark:bg-card/95 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-gray-200/50 dark:shadow-primary/5 w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto overflow-x-hidden p-4 sm:p-6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 " +
           (isCreate ? "max-w-xl sm:max-w-2xl" : "max-w-2xl sm:max-w-3xl")
         }
       >
@@ -181,7 +182,7 @@ export function PostForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4 sm:space-y-6"
+            className="min-w-0 overflow-hidden space-y-4 sm:space-y-6"
           >
             <SelectField
               control={form.control}
@@ -216,17 +217,13 @@ export function PostForm({
             {!isCreate && post?.imageUrl && !watchedFile && (() => {
               const imageSrc = getImageUrl(post.imageUrl)
               return imageSrc ? (
-              <div className="space-y-2">
+              <div className="min-w-0 space-y-2">
                 <p className="text-sm font-medium">현재 이미지</p>
-                <div className="relative w-full">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                <div className="flex min-w-0 w-full items-center justify-center overflow-hidden rounded-md border border-input bg-muted/30 px-4 py-6 min-h-[160px]">
+                  <PostImage
                     src={imageSrc}
                     alt={post.title}
-                    className="w-full h-auto rounded-lg border border-gray-200/80 dark:border-border/50 object-contain max-h-40 sm:max-h-52 md:max-h-64"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none"
-                    }}
+                    className="max-h-48 w-auto max-w-full border-0 shadow-none sm:max-h-64"
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">

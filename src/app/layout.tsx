@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <QueryProvider>
           <ThemeProvider

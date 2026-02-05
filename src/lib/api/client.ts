@@ -10,7 +10,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { refresh } from "@/api/auth"
 import { useAuthStore } from "@/lib/stores/auth-store"
-import { isTokenExpired } from "@/lib/utils/jwt"
 import { API_BASE_URL } from "@/lib/constants/api"
 
 /** 공개 API (로그인, 회원가입, 토큰 갱신) - JWT 불필요 */
@@ -151,33 +150,3 @@ apiClient.interceptors.response.use(
   }
 )
 
-/**
- * 토큰이 만료되었는지 확인하고, 만료되었다면 자동으로 갱신합니다.
- * @returns 갱신된 accessToken 또는 null
- */
-export async function ensureValidToken(): Promise<string | null> {
-  const { accessToken, refreshToken } = useAuthStore.getState()
-
-  if (!accessToken || !refreshToken) {
-    return null
-  }
-
-  // 토큰이 만료되지 않았으면 그대로 반환
-  if (!isTokenExpired(accessToken)) {
-    return accessToken
-  }
-
-  // 토큰이 만료되었으면 갱신 시도
-  try {
-    const response = await refresh({ refreshToken })
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-      response
-
-    useAuthStore.getState().setTokens(newAccessToken, newRefreshToken)
-    return newAccessToken
-  } catch {
-    // 갱신 실패 시 로그아웃 처리
-    useAuthStore.getState().clearTokens()
-    return null
-  }
-}

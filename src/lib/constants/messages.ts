@@ -21,4 +21,5 @@ export const SUCCESS_MESSAGES = {
   POST_CREATE: "게시글이 등록되었습니다.",
   POST_UPDATE: "게시글이 수정되었습니다.",
   POST_DELETE: "게시글이 삭제되었습니다.",
+  LINK_COPY: "링크가 복사되었습니다.",
 } as const

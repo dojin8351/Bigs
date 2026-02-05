@@ -115,8 +115,13 @@ export function usePostList(options: UsePostListOptions = {}) {
     setCurrentPage(0)
   }
 
+  /** 데이터는 있으나 검색/필터 결과가 없을 때 (글 작성 유도 대신 "검색 결과가 없습니다" 표시용) */
+  const isEmptyFromFilter =
+    (allPostsData?.content?.length ?? 0) > 0 && paginatedPosts.length === 0
+
   return {
     // 데이터
+    isEmptyFromFilter,
     postListData: allPostsData
       ? {
           ...allPostsData,

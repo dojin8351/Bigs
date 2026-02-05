@@ -48,7 +48,7 @@ export function PostListHeader({
       {onSearchChange && (
         <div className="relative">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 h-5 w-5 text-muted-foreground dark:text-foreground/80 pointer-events-none shrink-0"
             aria-hidden
           />
           <Input
@@ -56,7 +56,7 @@ export function PostListHeader({
             placeholder="제목으로 검색..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 h-11"
+            className="pl-10 h-11"
             aria-label="게시글 제목 검색"
           />
         </div>
