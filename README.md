@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DOHYEON 게시판
 
-## Getting Started
+Next.js 기반 게시판 서비스입니다. 로그인 후 게시글 작성, 수정, 삭제, 카테고리 필터, 정렬, 페이지네이션 기능을 제공합니다.
 
-First, run the development server:
+## 기술 스택
+
+- Next.js 16, React 19
+- TypeScript
+- React Query (TanStack Query)
+- Zustand (상태 관리)
+- React Hook Form + Zod (폼 검증)
+- Tailwind CSS, shadcn/ui
+- next-themes (다크 모드)
+
+## 사전 요구사항
+
+- Node.js 18.x 이상
+- npm, yarn, pnpm, bun 중 하나
+
+## 설치 및 실행
+
+### 1. 의존성 설치
+
+```bash
+npm install
+```
+
+### 2. 환경 변수 설정
+
+프로젝트 루트에 `.env.local` 파일을 생성하고 다음 변수를 설정합니다.
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://front-mission.bigs.or.kr
+```
+
+API 서버 주소가 다르면 해당 URL로 변경합니다.
+
+### 3. 개발 서버 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000) 으로 접속합니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. 프로덕션 빌드 및 실행
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## 사용 방법
 
-To learn more about Next.js, take a look at the following resources:
+### 로그인
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. [http://localhost:3000](http://localhost:3000) 접속
+2. 우측 상단 "로그인" 버튼 클릭
+3. 로그인 페이지에서 이메일과 비밀번호 입력
+4. "로그인" 버튼 클릭
+5. 로그인 성공 시 자동으로 게시판 페이지로 이동
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 테스트 계정 (임시)
 
-## Deploy on Vercel
+빠른 테스트를 위한 임시 계정입니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| 항목 | 값                |
+|------|------------------|
+| 이메일 | test12@gmail.com |
+| 비밀번호 | !test1234        |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+위 계정으로 로그인하면 게시판 기능을 바로 사용할 수 있습니다.
+
+### 회원가입
+
+1. 로그인 페이지 하단 "회원가입" 링크 클릭
+2. 이메일, 사용자 이름, 비밀번호, 비밀번호 확인 입력
+3. 비밀번호는 8자 이상, 숫자·영문자·특수문자(!%*#?&)를 각각 1개 이상 포함해야 합니다
+4. "회원가입" 버튼 클릭
+5. 가입 완료 후 로그인 페이지로 이동
+
+### 게시판 이용
+
+로그인 후 사용 가능합니다.
+
+1. **글 목록 보기**: 게시판 메인에서 전체 게시글 확인
+2. **카테고리 필터**: 좌측 사이드바(데스크톱) 또는 상단 수평 메뉴(모바일)에서 카테고리 선택
+3. **정렬**: 제목 또는 작성일 컬럼 헤더 클릭으로 오름차순/내림차순 전환
+4. **글 작성**: "글 작성" 버튼 클릭 후 카테고리, 제목, 내용, 이미지(선택) 입력
+5. **글 보기**: 목록에서 제목 클릭
+6. **글 수정/삭제**: 상세 보기에서 수정 또는 삭제 버튼 클릭
+
+### 다크 모드
+
+우측 상단 테마 토글 버튼으로 라이트/다크 모드 전환이 가능합니다.
+
+## 프로젝트 구조
+
+```
+src/
+├── api/           # API 호출 함수
+├── app/           # Next.js App Router 페이지
+├── components/    # React 컴포넌트
+├── hooks/         # 커스텀 훅
+├── lib/           # 유틸, 스토어, 상수, 스키마
+└── types/         # TypeScript 타입 정의
+```
+
+## 스크립트
+
+| 명령어 | 설명 |
+|--------|------|
+| `npm run dev` | 개발 서버 실행 (Hot Reload) |
+| `npm run build` | 프로덕션 빌드 |
+| `npm run start` | 프로덕션 서버 실행 |
+| `npm run lint` | ESLint 실행 |
