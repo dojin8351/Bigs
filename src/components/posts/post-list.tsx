@@ -77,23 +77,12 @@ export function PostList() {
     enabled: isDetailDialogOpen,
   })
 
-  const { handleViewPost, handleEditPost, handleDeletePost, formatDate } =
-    usePostActions()
+  const { handleViewPost, handleEditPost, formatDate } = usePostActions()
 
-  /** 목록 클릭 시 PostListItem → Post 변환 후 다이얼로그 오픈. 수정/삭제는 상세 fetch가 필요한 경우 handleEditPost 사용 */
+  /** 목록 클릭 시 PostListItem → Post 변환 후 다이얼로그 오픈 */
   const onViewPost = async (post: PostListItem) => {
     const fullPost = await handleViewPost(post)
     openDetailDialog(fullPost)
-  }
-
-  const onEditPost = async (post: PostListItem) => {
-    const fullPost = await handleEditPost(post)
-    openEditDialog(fullPost)
-  }
-
-  const onDeletePost = (post: PostListItem) => {
-    const fullPost = handleDeletePost(post)
-    openDeleteDialog(fullPost)
   }
 
   return (
