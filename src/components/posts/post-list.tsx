@@ -17,6 +17,7 @@ import { PostDetail } from "@/components/posts/post-detail"
 import { PostDeleteDialog } from "@/components/posts/post-delete-dialog"
 import { PostCategorySidebar } from "@/components/posts/post-category-sidebar"
 import { PostListHeader } from "@/components/posts/post-list-header"
+import { PostListActiveFilters } from "@/components/posts/post-list-active-filters"
 import { PostTable } from "@/components/posts/post-table"
 import { PostPagination } from "@/components/posts/post-pagination"
 import { usePostCategories } from "@/hooks/use-post-categories"
@@ -108,6 +109,16 @@ export function PostList() {
             onOpenCreateDialog={openCreateDialog}
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
+          />
+          <PostListActiveFilters
+            selectedCategory={selectedCategory}
+            searchQuery={searchQuery}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            categories={categories}
+            totalCount={postListData?.totalElements ?? 0}
+            onClearCategory={() => handleCategoryChange(undefined)}
+            onClearSearch={() => handleSearchChange("")}
           />
           <CardContent className="p-4 sm:p-6">
             <PostTable

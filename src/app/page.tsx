@@ -8,7 +8,6 @@
 import { useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { PageSkeleton } from "@/components/layout/page-skeleton"
 import {
@@ -40,7 +39,7 @@ const features = [
   {
     icon: Share2,
     title: "링크 공유",
-    description: "게시글 링크를 복사해 북마크나 공유가 가능해요.",
+    description: "게시글 링크를 복사해 공유가 가능해요.",
   },
 ]
 
@@ -63,7 +62,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-linear-to-br from-background via-background/95 to-accent/10 dark:from-background dark:via-background/98 dark:to-accent/5">
       <header className="flex items-center justify-between border-b border-border/40 bg-background/60 backdrop-blur-xl px-4 sm:px-6 py-4">
         <Link href="/" className="text-xl sm:text-2xl font-bold text-primary transition-all hover:opacity-80">
-          DOHYEON
+          BIGS
         </Link>
         <ThemeToggle />
       </header>
@@ -73,7 +72,7 @@ export default function Home() {
           {/* Hero */}
           <section className="text-center space-y-4">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              DOHYEON 게시판
+              BIGS 게시판
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
               간단하고 직관적인 게시판 서비스예요.
@@ -82,30 +81,7 @@ export default function Home() {
             </p>
           </section>
 
-          {/* 이 서비스는 어떻게 사용해요? */}
-          <section className="space-y-6">
-            <h2 className="text-xl sm:text-2xl font-semibold text-foreground">
-              이 서비스는 어떻게 사용해요?
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {features.map(({ icon: Icon, title, description }) => (
-                <div
-                  key={title}
-                  className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-primary/10 p-2.5 shrink-0">
-                      <Icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-foreground mb-1">{title}</h3>
-                      <p className="text-sm text-muted-foreground">{description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+
 
           {/* CTA: 로그인 / 회원가입 */}
           <section className="relative overflow-hidden rounded-2xl border border-border/50 bg-linear-to-br from-card via-card to-primary/5 dark:to-primary/10 backdrop-blur-xl p-8 sm:p-10 shadow-xl shadow-primary/5 dark:shadow-primary/10">
@@ -147,10 +123,35 @@ export default function Home() {
                     처음이시라면
                   </p>
                   <span className="text-sm font-medium text-primary group-hover:underline">
-                    무료로 가입하기 →
+                    가입하기 →
                   </span>
                 </Link>
               </div>
+            </div>
+          </section>
+
+          {/* 이 서비스는 어떻게 사용해요? */}
+          <section className="space-y-6">
+            <h2 className="text-xl sm:text-2xl font-semibold text-foreground">
+              이 서비스는 어떻게 사용해요?
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {features.map(({ icon: Icon, title, description }) => (
+                <div
+                  key={title}
+                  className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-lg bg-primary/10 p-2.5 shrink-0">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-foreground mb-1">{title}</h3>
+                      <p className="text-sm text-muted-foreground">{description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         </div>

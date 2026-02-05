@@ -270,21 +270,10 @@ export function PostTable({
 
       {/* 데스크톱: 테이블 */}
       <div className="hidden md:block rounded-lg border border-border/50 overflow-hidden">
-        {/* 정렬 상태 표시 */}
-        {onSort && sortColumn && (
-          <div className="px-4 py-2 bg-muted/20 border-b border-border/50 flex items-center gap-2 text-sm text-muted-foreground">
-            <span>정렬:</span>
-            <span className="font-medium text-foreground">
-              {sortLabels[sortColumn]}
-              {sortDirection === "asc" ? " ↑ 오름차순" : " ↓ 내림차순"}
-            </span>
-            <span className="text-xs">· 헤더를 클릭하면 정렬 방향을 바꿀 수 있습니다</span>
-          </div>
-        )}
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/30 border-b border-border/50">
+              <TableRow className="bg-muted/30 border-b border-border/50 [&>th:first-child]:rounded-tl-lg [&>th:last-child]:rounded-tr-lg">
                 <TableHead className="w-[80px] font-semibold px-4 py-3 text-center">번호</TableHead>
                 <SortableHeader
                   label="제목"

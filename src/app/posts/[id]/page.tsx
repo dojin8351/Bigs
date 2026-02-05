@@ -46,7 +46,6 @@ export default function PostDetailPage() {
   const {
     isEditDialogOpen,
     isDeleteDialogOpen,
-    selectedPost,
     openEditDialog,
     closeEditDialog,
     openDeleteDialog,
