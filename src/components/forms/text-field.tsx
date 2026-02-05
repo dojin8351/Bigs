@@ -1,5 +1,8 @@
 "use client"
 
+/**
+ * 일반 텍스트 입력 폼 필드 (react-hook-form 연동)
+ */
 import {
   FormControl,
   FormField,
@@ -15,6 +18,7 @@ interface TextFieldProps<T extends FieldValues> {
   name: FieldPath<T>
   label?: string
   placeholder?: string
+  maxLength?: number
 }
 
 export function TextField<T extends FieldValues>({
@@ -22,6 +26,7 @@ export function TextField<T extends FieldValues>({
   name,
   label,
   placeholder,
+  maxLength,
 }: TextFieldProps<T>) {
   return (
     <FormField
@@ -31,7 +36,7 @@ export function TextField<T extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <Input placeholder={placeholder} maxLength={maxLength} {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
