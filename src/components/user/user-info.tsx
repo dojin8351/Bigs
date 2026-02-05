@@ -1,5 +1,9 @@
 "use client"
 
+/**
+ * 로그인된 사용자 정보 표시 (아바타 + 드롭다운)
+ * 사용자 이름, 이메일 표시 및 로그아웃 버튼
+ */
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -10,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { LogOut, User } from "lucide-react"
+import { LogOut } from "lucide-react"
 
 interface UserInfoProps {
   username: string
@@ -46,11 +50,6 @@ export function UserInfo({ username, name, onLogout }: UserInfoProps) {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          <span>프로필</span>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onLogout} className="text-destructive">
           <LogOut className="mr-2 h-4 w-4" />
