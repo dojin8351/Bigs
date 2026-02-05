@@ -1,15 +1,34 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+"use client"
+
+import { useEffect } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
+import { useAuthStore } from "@/lib/stores/auth-store"
 
 export default function Home() {
+  const router = useRouter()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const hasHydrated = useAuthStore((state) => state.hasHydrated)
+
+  useEffect(() => {
+    if (hasHydrated && isAuthenticated) {
+      router.replace("/posts")
+    }
+  }, [hasHydrated, isAuthenticated, router])
+
+  if (!hasHydrated) {
+    return null
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-linear-to-br from-background via-background/95 to-accent/10 dark:from-background dark:via-background/98 dark:to-accent/5">
       <header className="flex items-center justify-between border-b border-border/40 bg-background/60 backdrop-blur-xl px-6 py-4">
@@ -22,7 +41,7 @@ export default function Home() {
         <div className="w-full max-w-md space-y-6 animate-fade-in">
           <Card className="border border-border/50 bg-card/50 backdrop-blur-xl shadow-2xl shadow-primary/5 dark:shadow-primary/10">
             <CardHeader className="space-y-3 text-center pb-6">
-              <CardTitle className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+              <CardTitle className="text-4xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                 환영합니다
               </CardTitle>
               <CardDescription className="text-base text-muted-foreground/80">
@@ -52,5 +71,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-  );
+  )
 }

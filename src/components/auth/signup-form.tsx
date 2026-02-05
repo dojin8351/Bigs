@@ -4,7 +4,7 @@
  * 회원가입 폼 컴포넌트
  * 이메일·이름·비밀번호·비밀번호 확인 입력 후 가입 API 호출, 성공 시 완료 모달 표시 후 로그인 페이지로 이동
  */
-import { useState, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -35,12 +35,21 @@ import { PasswordField } from "@/components/forms/password-field"
 import { signupSchema, type SignupFormValues } from "@/lib/schemas/auth"
 import { signUp } from "@/api/auth"
 import type { signUpReq } from "@/types/auth"
+import { useAuthStore } from "@/lib/stores/auth-store"
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants/messages"
 import { INPUT_LIMITS } from "@/lib/constants/validation"
 
 export function SignupForm() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
   const router = useRouter()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const hasHydrated = useAuthStore((state) => state.hasHydrated)
+
+  useEffect(() => {
+    if (hasHydrated && isAuthenticated) {
+      router.replace("/posts")
+    }
+  }, [hasHydrated, isAuthenticated, router])
 
   /** signupSchema: 이메일, 이름(2~50자), 비밀번호(8자+숫자·영문·특수문자), 비밀번호 확인 일치 */
   const form = useForm<SignupFormValues>({
@@ -183,10 +192,7 @@ export function SignupForm() {
       {/* 회원가입 성공 모달 */}
       <Dialog
         open={isSuccessModalOpen}
-        onOpenChange={(open) => {
-          if (!open) return
-          setIsSuccessModalOpen(open)
-        }}
+        onOpenChange={setIsSuccessModalOpen}
       >
         <DialogContent onInteractOutside={(e) => e.preventDefault()}>
           <DialogHeader>

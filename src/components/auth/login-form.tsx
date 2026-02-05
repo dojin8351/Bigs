@@ -4,7 +4,7 @@
  * 로그인 폼 컴포넌트
  * 이메일·비밀번호 입력 후 로그인 API 호출, 성공 시 게시판 페이지로 이동
  */
-import { useCallback } from "react"
+import { useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -33,6 +33,14 @@ import { INPUT_LIMITS } from "@/lib/constants/validation"
 export function LoginForm() {
   const router = useRouter()
   const setTokens = useAuthStore((state) => state.setTokens)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const hasHydrated = useAuthStore((state) => state.hasHydrated)
+
+  useEffect(() => {
+    if (hasHydrated && isAuthenticated) {
+      router.replace("/posts")
+    }
+  }, [hasHydrated, isAuthenticated, router])
 
   /** zodResolver + loginSchema: 이메일 형식, 비밀번호 필수 검증 */
   const form = useForm<LoginFormValues>({
