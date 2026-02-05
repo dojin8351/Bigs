@@ -29,6 +29,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/api/post"
 import { postKeys } from "@/lib/queries/post-keys"
 import { INPUT_LIMITS } from "@/lib/constants/validation"
+import { API_BASE_URL } from "@/lib/constants/api"
 
 interface PostFormProps {
   open: boolean
@@ -177,7 +178,7 @@ export function PostForm({
                   {/* API imageUrl이 상대 경로일 수 있음. base URL 결합. next/image는 외부 도메인 설정 필요해 img 사용 */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`https://front-mission.bigs.or.kr${post.imageUrl}`}
+                    src={`${API_BASE_URL}${post.imageUrl.startsWith("/") ? "" : "/"}${post.imageUrl}`}
                     alt={post.title}
                     className="w-full h-auto rounded-lg border border-gray-200/80 dark:border-border/50 object-contain max-h-40 sm:max-h-52 md:max-h-64"
                     onError={(e) => {

@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { Post } from "@/types/post"
+import { API_BASE_URL } from "@/lib/constants/api"
 
 interface PostDetailProps {
   post: Post
@@ -56,10 +57,9 @@ export function PostDetail({
     }
     
     // 상대 경로인 경우 API 베이스 URL과 결합
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://front-mission.bigs.or.kr"
     // imageUrl이 이미 "/"로 시작하는지 확인
     const path = imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`
-    return `${apiBaseUrl}${path}`
+    return `${API_BASE_URL}${path}`
   }
 
   const imageUrl = getImageUrl(post.imageUrl)
