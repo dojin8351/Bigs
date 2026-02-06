@@ -5,7 +5,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "게시판 | DOHYEON",
+  title: "게시판 | BIGS",
   description: "게시글을 작성하고 관리하세요",
 }
 

@@ -24,8 +24,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DOHYEON | 게시판",
-  description: "DOHYEON 게시판 서비스",
+  title: "BIGS | 게시판",
+  description: "BIGS 게시판 서비스",
 };
 
 export default function RootLayout({

@@ -67,7 +67,7 @@ export default function PostsPage() {
           href="/posts"
           className="text-xl sm:text-2xl font-bold text-primary transition-all hover:opacity-80"
         >
-          DOHYEON
+          BIGS
         </Link>
         <div className="flex items-center gap-2 sm:gap-4">
           {user && (

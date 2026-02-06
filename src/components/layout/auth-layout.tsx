@@ -1,7 +1,7 @@
 /**
  * 인증 페이지 공통 레이아웃 (로그인·회원가입)
  *
- * - 헤더: 로고(DOHYEON, / 링크), 테마 토글
+ * - 헤더: 로고(BIGS, / 링크), 테마 토글
  * - 메인: 중앙 정렬, max-w-md, 페이드인 애니메이션
  * - title, description은 aria-label에 조합하여 접근성 개선
  */
@@ -25,7 +25,7 @@ export function AuthLayout({ children, title, description }: AuthLayoutProps) {
           href="/" 
           className="text-2xl font-bold text-primary transition-all hover:opacity-80"
         >
-          DOHYEON
+          BIGS
         </Link>
         <ThemeToggle />
       </header>

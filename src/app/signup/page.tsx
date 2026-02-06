@@ -7,7 +7,7 @@ import { AuthLayout } from "@/components/layout/auth-layout"
 import { SignupForm } from "@/components/auth/signup-form"
 
 export const metadata: Metadata = {
-  title: "회원가입 | DOHYEON",
+  title: "회원가입 | BIGS",
   description: "새 계정을 만드세요",
 }
 

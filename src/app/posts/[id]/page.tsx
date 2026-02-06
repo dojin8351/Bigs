@@ -60,9 +60,9 @@ export default function PostDetailPage() {
 
   useEffect(() => {
     if (post?.title) {
-      document.title = `${post.title} | DOHYEON`
+      document.title = `${post.title} | BIGS`
       return () => {
-        document.title = "게시판 | DOHYEON"
+        document.title = "게시판 | BIGS"
       }
     }
   }, [post?.title])
@@ -139,7 +139,7 @@ export default function PostDetailPage() {
           href="/posts"
           className="text-xl sm:text-2xl font-bold text-primary transition-all hover:opacity-80"
         >
-          DOHYEON
+          BIGS
         </Link>
         <div className="flex items-center gap-2 sm:gap-4">
           {user && (
